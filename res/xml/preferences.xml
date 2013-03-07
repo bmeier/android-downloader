@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="General" >
+        <EditTextPreference
+            android:key="log_level"
+            android:title="Logging Level" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Download" >
+        <EditTextPreference
+            android:key="download_folder"
+            android:summary="Set the default download folder"
+            android:title="Download Folder" />
+        <EditTextPreference
+            android:defaultValue="1"
+            android:key="no_of_parallel_downloads"
+            android:summary="Set the number of parallel downloads"
+            android:title="Parallel Downloads" />
+        <EditTextPreference
+            android:key="max_download_speed"
+            android:summary="Throttle the download speed"
+            android:title="Maximum Download Speed" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Connection" >
+        <EditTextPreference
+            android:key="timeout"
+            android:title="Timeout" />
+        <EditTextPreference
+            android:key="request_timeout"
+            android:title="Request timeout" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
