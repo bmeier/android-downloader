@@ -5,46 +5,20 @@ public class Download {
 		CANCELED, ERROR, FINISHED, QUEUED, RUNNING, WAITING;
 	}
 
-	public static class Event {
-		private final Download	mSource;
+	private String mFileName;
+	private String mDirectory;
+	private long mId;
+	private String mURL;
+	private long mSize;
+	private State mState;
 
-		public Event(Download source) {
-			mSource = source;
-		}
-
-		public Download getSource() {
-			return mSource;
-		}
-
+	public void setDirectory(String directory) {
+		mDirectory = directory;
 	}
 
-	public static class StateChangedEvent extends Event {
-		private final State	mNewState;
-		private final State	mOldState;
-
-		public StateChangedEvent(Download source, State oldState, State newState) {
-			super(source);
-			mOldState = oldState;
-			mNewState = newState;
-		}
-
-		public State getNewState() {
-			return mNewState;
-		}
-
-		public State getOldState() {
-			return mOldState;
-		}
-
+	public String getDirectory() {
+		return mDirectory;
 	}
-
-	private String	mFileName;
-	private String	mFilePath;
-	private long	mId;
-	private String	mLocal;
-	private String	mRemote;
-	private long	mSize;
-	private State	mState;
 
 	public String getFileName() {
 		return mFileName;
@@ -54,12 +28,8 @@ public class Download {
 		return mId;
 	}
 
-	public String getLocal() {
-		return mLocal;
-	}
-
-	public String getRemote() {
-		return mRemote;
+	public String getURL() {
+		return mURL;
 	}
 
 	public long getSize() {
@@ -78,12 +48,8 @@ public class Download {
 		mId = id;
 	}
 
-	public void setLocal(String local) {
-		mLocal = local;
-	}
-
-	public void setRemote(String remote) {
-		mRemote = remote;
+	public void setURL(String url) {
+		mURL = url;
 	}
 
 	public void setSize(long size) {
@@ -93,10 +59,6 @@ public class Download {
 	public void setState(State state) {
 		if (state == mState)
 			return;
-
-		State oldState = mState;
 		mState = state;
-		StateChangedEvent event = new StateChangedEvent(this, oldState, mState);
-		AD.getAD().post(event);
 	}
 }

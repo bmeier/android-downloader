@@ -7,62 +7,13 @@ import java.util.List;
 import com.google.common.eventbus.Subscribe;
 
 public class DownloadQueue {
-	public static class Event {
-		private final DownloadQueue	mSource;
-
-		public Event(DownloadQueue source) {
-			mSource = source;
-		}
-
-		public DownloadQueue getSource() {
-			return mSource;
-		}
-	}
-
-	public static class AddEvent extends Event {
-		private final Download	mDownload;
-
-		public AddEvent(DownloadQueue source, Download download) {
-			super(source);
-			mDownload = download;
-		}
-
-		public Download getDownload() {
-			return mDownload;
-		}
-	}
-
 	private List<Download>	mDownloads	= new ArrayList<Download>();
 
 	public DownloadQueue() {
-		AD.getAD().getEventBus().register(this);
-	}
-
-	@Subscribe
-	public void onStateChanged(Download.StateChangedEvent event) {
-		Download.State state = event.getNewState();
-		switch (state) {
-		case RUNNING:
-		case WAITING:
-		case QUEUED:
-			break;
-		default:
-			startNextDownload();
-			break;
-		}
-	}
-
-	private void startNextDownload() {
-		for (Download download : mDownloads) {
-			if (download.getState() == Download.State.QUEUED) {
-				download.setState(Download.State.RUNNING);
-			}
-		}
 	}
 
 	public void add(Download download) {
 		mDownloads.add(download);
-		AD.getAD().getEventBus().post(new AddEvent(this, download));
 	}
 
 	public void moveUp(Download download) {
@@ -70,8 +21,6 @@ public class DownloadQueue {
 		if (idx > 0) {
 			mDownloads.remove(idx);
 			mDownloads.add(idx - 1, download);
-			Event event = new Event(this);
-			AD.getAD().post(event);
 		}
 
 	}
@@ -81,8 +30,6 @@ public class DownloadQueue {
 		if (idx >= 0 && idx < mDownloads.size() - 2) {
 			mDownloads.remove(idx);
 			mDownloads.add(idx + 1, download);
-			Event event = new Event(this);
-			AD.getAD().post(event);
 		}
 	}
 
@@ -91,8 +38,6 @@ public class DownloadQueue {
 		if (idx > 0) {
 			mDownloads.remove(idx);
 			mDownloads.add(0, download);
-			Event event = new Event(this);
-			AD.getAD().post(event);
 		}
 	}
 
@@ -101,8 +46,6 @@ public class DownloadQueue {
 		if (idx >= 0 && idx < mDownloads.size() - 2) {
 			mDownloads.remove(idx);
 			mDownloads.add(download);
-			Event event = new Event(this);
-			AD.getAD().post(event);
 		}
 	}
 

@@ -3,96 +3,92 @@ package de.bmeier.android.downloader.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
-import android.widget.ListView;
 import de.bmeier.android.downloader.AD;
 import de.bmeier.android.downloader.R;
 import de.bmeier.android.downloader.crawler.CrawlerTask;
 import de.bmeier.android.downloader.crawler.GenericCrawler;
+import de.bmeier.android.downloader.widget.AddURLDialog;
+import de.bmeier.android.downloader.widget.FilePicker;
 
 /**
  * Displays the download queue.
  */
 public class QueueActivity extends Activity implements OnMenuItemClickListener {
-	private MenuItem	mAddItem;
-	private MenuItem	mSettingsItem;
-	private MenuItem	mExitItem;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_queue);
-		ListView downloadListView = (ListView) findViewById(R.id.downloadListView);
-		downloadListView.setAdapter(new QueueListAdapter(this));
+		FilePicker filePicker = new FilePicker(this);
+		filePicker.init(Environment.getExternalStorageDirectory(), null, null);
+		setContentView(filePicker);
+		// ListView downloadListView = (ListView)
+		// findViewById(R.id.downloadListView);
+		// downloadListView.setAdapter(new QueueListAdapter(this));
 	}
 
 	@Override
-	protected void onStart()
-	{
+	protected void onStart() {
 		super.onStart();
 		AD.getAD().startService(this);
 
 		new CrawlerTask(new GenericCrawler()).execute("http://www.google.com");
-
-		// DownloadQueue queue = AD.getAD().getDownloadQueue();
-		//
-		// Download dl = new Download();
-		// dl.setFileName("test.bin");
-		// queue.add(dl);
-		//
-		// dl = new Download();
-		// dl.setFileName("whatever.exe");
-		// queue.add(dl);
-		//
-		// dl = new Download();
-		// dl.setFileName("nasty.jpg");
-		// queue.add(dl);
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
-		mAddItem = menu.findItem(R.id.menu_add);
-		mAddItem.setOnMenuItemClickListener(this);
+		MenuItem menuItem = menu.findItem(R.id.menu_add);
+		menuItem.setOnMenuItemClickListener(this);
 
-		mSettingsItem = menu.findItem(R.id.menu_settings);
-		mSettingsItem.setOnMenuItemClickListener(this);
+		menuItem = menu.findItem(R.id.menu_settings);
+		menuItem.setOnMenuItemClickListener(this);
 
-		mExitItem = menu.findItem(R.id.menu_exit);
-		mExitItem.setOnMenuItemClickListener(this);
+		menuItem = menu.findItem(R.id.menu_exit);
+		menuItem.setOnMenuItemClickListener(this);
 		return true;
 	}
 
 	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-		AD.getAD().stopService(this);
-	}
-
-	@Override
-	public boolean onMenuItemClick(MenuItem item)
-	{
-		if (item == mSettingsItem) {
+	public boolean onMenuItemClick(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_add:
+			new AddURLDialog(this, new AddURLDialog.OnURLAddedListener() {
+				@Override
+				public void onURLAdded(String url, String directory) {
+					Intent intent = new Intent(QueueActivity.this,
+							CrawlerActivity.class);
+					intent.putExtra("URL", url);
+					intent.putExtra("DIRECTORY", directory);
+					startActivity(intent);
+				}
+			}).show();
+			// FilePickerDialog dialog = new FilePickerDialog(this, null,
+			// Environment.getExternalStorageDirectory(), null);
+			// dialog.show();
+			Log.i("TAG", "Add URL");
+			return true;
+		case R.id.menu_exit:
+			AD.getAD().stopService(this);
+			finish();
+			return true;
+		case R.id.menu_settings:
 			Log.i("TAG", "Settings");
 			Intent intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
-		} else if (item == mAddItem) {
-			Log.i("TAG", "Add URL");
-		} else if (item == mExitItem) {
-			finish();
+			return true;
+		default:
+			break;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
-	public void onBackPressed()
-	{
+	public void onBackPressed() {
 		moveTaskToBack(true);
 	}
 }

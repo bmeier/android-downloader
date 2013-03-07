@@ -49,18 +49,6 @@ public class QueueListAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	@Subscribe
-	public void onQueueEvent(DownloadQueue.Event event) {
-		notifyDataSetChanged();
-	}
-
-	@Subscribe
-	public void onDownloadEvent(Download.Event event) {
-		if (mDownloadQueue.getDownloads().contains(event.getSource())) {
-			notifyDataSetChanged();
-		}
-	}
-
 	@Override
 	public int getCount() {
 		return mDownloadQueue.getSize();

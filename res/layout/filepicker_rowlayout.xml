@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/filepicker_rowlayout_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/filepicker_rowlayout_detailTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingRight="5dp"
+        android:src="@drawable/ic_folder" />
+
+    <TextView
+        android:id="@+id/filepicker_rowlayout_fileNameTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/filepicker_rowlayout_fileSizeTextView"
+        android:layout_toRightOf="@+id/filepicker_rowlayout_imageView"
+        android:text="filename"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/filepicker_rowlayout_fileSizeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/filepicker_rowlayout_fileNameTextView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="filesize"
+        android:textAlignment="textEnd"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/filepicker_rowlayout_permisssionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/filepicker_rowlayout_detailTextView"
+        android:layout_alignBottom="@+id/filepicker_rowlayout_detailTextView"
+        android:layout_alignRight="@+id/filepicker_rowlayout_fileSizeTextView"
+        android:text="rwx"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/filepicker_rowlayout_detailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/filepicker_rowlayout_fileNameTextView"
+        android:layout_below="@+id/filepicker_rowlayout_fileNameTextView"
+        android:layout_toLeftOf="@+id/filepicker_rowlayout_permisssionTextView"
+        android:text="detail"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>
